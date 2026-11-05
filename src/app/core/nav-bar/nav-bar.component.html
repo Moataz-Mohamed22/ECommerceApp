@@ -1,0 +1,111 @@
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand" routerLink="/">
+      <span class="brand-name">E-commerce</span>
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+
+      <!-- Navigation Links -->
+      <ul class="navbar-nav mx-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/shop" routerLinkActive="active">
+            Shopping
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/about" routerLinkActive="active">
+            About Us
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/best-sellers" routerLinkActive="active">
+            Best Sellers
+          </a>
+        </li>
+
+      </ul>
+
+      <!-- Right Actions -->
+      <div class="navbar-actions">
+
+        <!-- Search -->
+        <form class="search-form" role="search" (submit)="$event.preventDefault()">
+
+          <i class="bi bi-search search-icon"></i>
+
+          <input type="search" class="search-input" placeholder="Search products..." aria-label="Search products" />
+        </form>
+
+        <!-- Shopping Cart -->
+
+        <a class="account-btn" routerLink="/cart" aria-label="Shopping cart" title="Shopping Cart">
+
+          <i class="bi bi-cart"></i>
+        </a>
+        <!-- Account -->
+        <!-- Account Dropdown -->
+        <div class="dropdown account-dropdown">
+
+          <!-- User Icon -->
+          <button class="account-btn" type="button" data-bs-toggle="dropdown" data-bs-display="static"
+            aria-expanded="false" aria-label="Account menu">
+
+            <i class="bi bi-person-circle"></i>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <ul class="dropdown-menu dropdown-menu-end">
+
+            <li class="dropdown-heading">
+              <span>MY ACCOUNT</span>
+            </li>
+
+            <li>
+              <a class="dropdown-item" routerLink="/login">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span>Login</span>
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item" routerLink="/register">
+                <i class="bi bi-person-plus"></i>
+                <span>Register</span>
+              </a>
+            </li>
+
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+
+            <li>
+              <button class="dropdown-item logout-item" type="button">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Logout</span>
+              </button>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,195 @@
+@if (isLoading()) {
+  <div class="container product-state">
+    <div class="loading-spinner"></div>
+    <p>Loading product...</p>
+  </div>
+}
+@else if (product(); as p) {
+
+  <div class="container product-details-page">
+
+    <!-- Breadcrumb -->
+    <nav class="product-breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>/</span>
+      <a routerLink="/shop">Shop</a>
+      <span>/</span>
+      <span class="current">{{ p.name }}</span>
+    </nav>
+
+    <div class="row g-5">
+
+      <!-- Product Gallery -->
+      <div class="col-12 col-lg-6">
+        <div class="product-gallery">
+
+          <div class="main-image-container">
+
+            @if (p.photos?.length) {
+              <img
+                class="main-product-image"
+                [src]="host + (selectedImage() ?? p.photos[0].imageName)"
+                [alt]="p.name">
+            }
+            @else {
+              <div class="no-image">
+                <i class="bi bi-image"></i>
+                <span>No image available</span>
+              </div>
+            }
+
+            @if (p.oldPrice > p.price) {
+              <span class="sale-badge">SALE</span>
+            }
+
+          </div>
+
+          <!-- Thumbnails -->
+          @if (p.photos?.length) {
+            <div class="product-thumbnails">
+
+              @for (photo of p.photos; track photo.imageName) {
+                <button
+                  type="button"
+                  class="thumbnail-button"
+                  [class.active]="
+                    (selectedImage() ?? p.photos[0].imageName)
+                    === photo.imageName
+                  "
+                  (click)="selectImage(photo.imageName)"
+                  [attr.aria-label]="'View ' + p.name + ' image'">
+
+                  <img
+                    [src]="host + photo.imageName"
+                    [alt]="p.name">
+                </button>
+              }
+
+            </div>
+          }
+
+        </div>
+      </div>
+
+      <!-- Product Information -->
+      <div class="col-12 col-lg-6">
+        <div class="product-information">
+
+          <span class="product-category">
+            {{ p.categoryName }}
+          </span>
+
+          <h1 class="product-title">
+            {{ p.name }}
+          </h1>
+
+          <div class="product-divider"></div>
+
+          <!-- Price -->
+          <div class="product-price-area">
+            <span class="current-price">
+              {{ p.price | currency:'EGP':'symbol':'1.0-2' }}
+            </span>
+
+            @if (p.oldPrice > p.price) {
+              <span class="old-price">
+                {{ p.oldPrice | currency:'EGP':'symbol':'1.0-2' }}
+              </span>
+
+              <span class="sale-label">
+                Save {{ ((p.oldPrice - p.price) / p.oldPrice * 100) | number:'1.0-0' }}%
+              </span>
+            }
+          </div>
+
+          <p class="tax-note">
+            <i class="bi bi-shield-check"></i>
+            Secure checkout and reliable delivery
+          </p>
+
+          <!-- Description -->
+          <div class="product-description">
+            <h5>Product Description</h5>
+            <p>{{ p.description }}</p>
+          </div>
+
+          <div class="product-divider"></div>
+
+          <!-- Quantity -->
+          <div class="quantity-section">
+            <label>Quantity</label>
+
+            <div class="quantity-control">
+              <button
+                type="button"
+                (click)="decreaseQuantity()"
+                [disabled]="quantity() <= 1"
+                aria-label="Decrease quantity">
+                <i class="bi bi-dash"></i>
+              </button>
+
+              <span>{{ quantity() }}</span>
+
+              <button
+                type="button"
+                (click)="increaseQuantity()"
+                aria-label="Increase quantity">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+            <div class="total-price">
+              Total: {{ (quantity() * (product()?.price ?? 0)) | currency:'EGP':'symbol':'1.0-2' }}
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="product-actions">
+            <button type="button" class="btn-add-cart">
+              <i class="bi bi-bag-plus"></i>
+              Add To Cart
+            </button>
+
+            <button
+              type="button"
+              class="btn-wishlist"
+              aria-label="Add to wishlist">
+              <i class="bi bi-heart"></i>
+            </button>
+          </div>
+
+          <!-- Benefits -->
+          <div class="product-benefits">
+            <div>
+              <i class="bi bi-truck"></i>
+              <span>Reliable Delivery</span>
+            </div>
+
+            <div>
+              <i class="bi bi-shield-check"></i>
+              <span>Secure Payment</span>
+            </div>
+
+            <div>
+              <i class="bi bi-arrow-repeat"></i>
+              <span>Easy Returns</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+}
+@else {
+  <div class="container product-state">
+    <i class="bi bi-exclamation-circle"></i>
+    <h3>Product Not Found</h3>
+    <p>{{ errorMessage() ?? 'The product you are looking for does not exist.' }}</p>
+
+    <a routerLink="/shop" class="back-to-shop">
+      Back To Shopping
+    </a>
+  </div>
+}
