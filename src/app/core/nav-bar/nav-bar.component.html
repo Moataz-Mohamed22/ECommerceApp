@@ -57,7 +57,7 @@
 
         <a class="account-btn" routerLink="/cart" aria-label="Shopping cart" title="Shopping Cart">
 
-          <i class="bi bi-cart"></i>
+          <i class="bi bi-cart" matBadge="{{count()}}" matBadgeColor="warn" [matBadgeHidden]="count() === 0"></i>
         </a>
         <!-- Account -->
         <!-- Account Dropdown -->

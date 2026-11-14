@@ -1,19 +1,54 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+
+import { Component, inject } from '@angular/core';
+import {
+  Router,
+  RouterOutlet,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError
+} from '@angular/router';
+
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { filter } from 'rxjs';
+import { LoadingService } from './core/services/loading.service';
 import { NavBarComponent } from './core/nav-bar/nav-bar.component';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @Component({
-  imports: [RouterOutlet, NavBarComponent,PaginationModule],
   selector: 'app-root',
-  styleUrl: './app.scss',
+  imports: [
+    RouterOutlet,
+    NgxSpinnerModule,
+    NavBarComponent
+],
   templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class App  {
+export class App {
 
+  private router = inject(Router);
+  private loadingService = inject(LoadingService);
 
+  constructor() {
 
-  protected readonly title = signal('E-commerce App');
+    this.router.events.pipe(
+      filter(event =>
+        event instanceof NavigationStart ||
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      )
+    ).subscribe(event => {
 
+      if (event instanceof NavigationStart) {
+        this.loadingService.show();
+      }
 
+      else {
+        this.loadingService.hide();
+      }
+
+    });
+
+  }
 }

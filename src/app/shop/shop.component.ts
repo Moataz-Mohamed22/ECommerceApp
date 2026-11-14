@@ -1,5 +1,4 @@
-
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { ShopService } from './shop.service';
@@ -10,21 +9,21 @@ import { ShopItemComponent } from './shop-item/shop-item.component';
 import { ProductParam } from '../shared/models/productParam';
 import { PaginationComponent } from '../shared/components/pagination/pagination.component';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { NgxSpinnerComponent } from 'ngx-spinner';
+import { HotToastService } from '@ngxpert/hot-toast';
+import { NotificationsService } from '../core/services/notifications.service';
 
 @Component({
   selector: 'app-shop',
   standalone: true,
-  imports: [
-    ShopItemComponent,
-    PaginationComponent,
-    FormsModule
-  ],
+  imports: [ShopItemComponent, PaginationComponent, FormsModule],
   styleUrl: './shop.component.scss',
   templateUrl: './shop.component.html',
 })
 export class ShopComponent implements OnInit {
-
+  
   constructor(private _service: ShopService) {}
+
 
   // Pagination Parameters
   productParam: ProductParam = new ProductParam();
@@ -53,107 +52,83 @@ export class ShopComponent implements OnInit {
 
   // Load Products
   getAllProduct(): void {
-
     this.isLoading.set(true);
 
-    this._service.getProducts(
-      this.CategoryId ?? undefined,
-      this.productParam.pageNumber,
-      this.productParam.pageSize,
-      this.productParam.Sort
-    ).subscribe({
+    this._service
+      .getProducts(
+        this.CategoryId ?? undefined,
+        this.productParam.pageNumber,
+        this.productParam.pageSize,
+        this.productParam.Sort,
+      )
+      .subscribe({
+        next: (value: IPagination) => {
+          this.products.set(value.data ?? []);
+          this.totalItems.set(value.totalCount ?? 0);
 
-      next: (value: IPagination) => {
+          this.isLoading.set(false);
 
-        this.products.set(value.data ?? []);
-        this.totalItems.set(value.totalCount ?? 0);
+          console.log('Products:', this.products());
+          console.log('Total Items:', this.totalItems());
+        },
 
-        this.isLoading.set(false);
+        error: (error) => {
+          console.error('Error loading products:', error);
 
-        console.log('Products:', this.products());
-        console.log('Total Items:', this.totalItems());
-
-      },
-
-      error: (error) => {
-
-        console.error('Error loading products:', error);
-
-        this.isLoading.set(false);
-
-      }
-
-    });
+          this.isLoading.set(false);
+        },
+      });
   }
 
   // Load Categories
   getAllCategory(): void {
-
     this._service.getCategories().subscribe({
-
       next: (value: ICategory[]) => {
-
         this.categories.set(value ?? []);
-
       },
 
       error: (error) => {
-
         console.error('Error loading categories:', error);
-
-      }
-
+      },
     });
-
   }
 
   // Filter By Category
   selectedCategoryId(categoryId: number | null): void {
-
     this.CategoryId = categoryId;
 
     this.productParam.pageNumber = 1;
 
     this.getAllProduct();
-
   }
 
   // Sorting
   onSortChange(event: Event): void {
-
-    const selectedValue =
-      (event.target as HTMLSelectElement).value;
+    const selectedValue = (event.target as HTMLSelectElement).value;
 
     this.productParam.Sort = selectedValue;
 
     this.productParam.pageNumber = 1;
 
     this.getAllProduct();
-
   }
 
   // Pagination
   onPageChanged(event: PageChangedEvent): void {
-
     this.productParam.pageNumber = event.page;
 
     this.productParam.pageSize = event.itemsPerPage;
 
     this.getAllProduct();
-
   }
 
   // Search
   onSearch(event: Event): void {
-
-    this.searchTerm =
-      (event.target as HTMLInputElement).value;
-
+    this.searchTerm = (event.target as HTMLInputElement).value;
   }
 
   // Filter Products Locally
   get filteredProducts(): IProduct[] {
-
     const term = this.searchTerm.trim().toLowerCase();
 
     const allProducts = this.products();
@@ -162,16 +137,11 @@ export class ShopComponent implements OnInit {
       return allProducts;
     }
 
-    return allProducts.filter(product =>
-
-      (product.name ?? '').toLowerCase().includes(term) ||
-
-      (product.description ?? '').toLowerCase().includes(term) ||
-
-      (product.categoryName ?? '').toLowerCase().includes(term)
-
+    return allProducts.filter(
+      (product) =>
+        (product.name ?? '').toLowerCase().includes(term) ||
+        (product.description ?? '').toLowerCase().includes(term) ||
+        (product.categoryName ?? '').toLowerCase().includes(term),
     );
-
   }
-
 }

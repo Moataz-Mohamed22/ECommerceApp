@@ -1,4 +1,14 @@
 <app-nav-bar></app-nav-bar>
 
-<router-outlet></router-outlet>
+<ngx-spinner
+  name="globalSpinner"
+  type="ball-fussion"
+  [fullScreen]="true"
+  bdColor="rgba(0, 0, 0, 0.65)"
+  color="#E0CFBA">
 
+  <p class="spinner-text">Loading...</p>
+
+</ngx-spinner>
+
+<router-outlet />

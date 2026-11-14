@@ -1,4 +1,80 @@
-@import "bootstrap-icons/font/bootstrap-icons.css";
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$rose-palette,
+        tertiary: mat.$red-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: mat.$magenta-palette,
+        tertiary: mat.$violet-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+  height: 100%;
+}
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 @import 'material-icons/iconfont/material-icons.css';
 
 // Core colors
@@ -8,15 +84,14 @@ $dark-gray: #555555;
 $soft-gray: #888888;
 
 // Warm neutrals
-$champagne: #E0CFBA;
-$ivory: #F8F0E7;
-$off-white: #F9F9F9;
-$pure-white: #FCFCFC;
+$champagne: #e0cfba;
+$ivory: #f8f0e7;
+$off-white: #f9f9f9;
+$pure-white: #fcfcfc;
 
 // Accent colors
-$bronze: #A8715A;
-$terracotta: #DD8560;
-
+$bronze: #a8715a;
+$terracotta: #dd8560;
 
 :root {
   --color-primary: #{$luxury-black};
@@ -32,8 +107,8 @@ $terracotta: #DD8560;
   --color-accent: #{$bronze};
   --color-accent-hover: #{$terracotta};
 
-  --font-heading: "Playfair Display", Georgia, serif;
-  --font-body: "Inter", Arial, sans-serif;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', Arial, sans-serif;
 
   --radius-sm: 6px;
   --radius-md: 12px;
@@ -44,7 +119,6 @@ $terracotta: #DD8560;
 
   --transition-smooth: 0.3s ease;
 }
-
 
 * {
   box-sizing: border-box;
@@ -58,7 +132,12 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   color: var(--color-primary);
   font-weight: 600;
@@ -73,9 +152,6 @@ a {
 img {
   max-width: 100%;
 }
-
-
-
 
 .btn-luxury {
   background-color: var(--color-primary);
@@ -107,16 +183,14 @@ img {
   color: white;
 }
 
-
-
-
 .product-card {
   background-color: var(--color-surface);
   border: 1px solid rgba(168, 113, 90, 0.15);
   border-radius: var(--radius-md);
   overflow: hidden;
-  transition: transform var(--transition-smooth),
-              box-shadow var(--transition-smooth);
+  transition:
+    transform var(--transition-smooth),
+    box-shadow var(--transition-smooth);
 }
 
 .product-card:hover {
@@ -156,9 +230,6 @@ img {
   font-size: 0.9rem;
 }
 
-
-
-
 .section-luxury {
   padding: 5rem 0;
   background-color: var(--color-background);
@@ -182,7 +253,7 @@ img {
 
 .form-control,
 .form-select {
-  border: 1px solid #E0CFBA;
+  border: 1px solid #e0cfba;
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
 }
@@ -197,4 +268,3 @@ img {
   background-color: var(--color-champagne);
   color: var(--color-primary);
 }
-
