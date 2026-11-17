@@ -1,4 +1,3 @@
-
 import { Component, afterNextRender, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -10,32 +9,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  imports: [
-    RouterLink,
-    RouterLinkActive,
-    MatBadgeModule,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [RouterLink, RouterLinkActive, MatBadgeModule, MatButtonModule, MatIconModule],
   selector: 'app-nav-bar',
   styleUrl: './nav-bar.component.scss',
   templateUrl: './nav-bar.component.html',
 })
 export class NavBarComponent {
-
   private cartService = inject(CartService);
 
   // Automatically tracks cart changes
   count = toSignal(
-    this.cartService.cart.pipe(
-      map(cart =>
-        cart?.cartItems.reduce(
-          (total, item) => total + item.quantity,
-          0
-        ) ?? 0
-      )
+    this.cartService.cart$.pipe(
+      map((cart) => cart?.cartItems.reduce((total, item) => total + item.quantity, 0) ?? 0),
     ),
-    { initialValue: 0 }
+    { initialValue: 0 },
   );
 
   constructor() {
@@ -44,7 +31,7 @@ export class NavBarComponent {
 
       if (cartId) {
         this.cartService.getCart(cartId).subscribe({
-          error: err => console.error('Error loading cart:', err)
+          error: (err) => console.error('Error loading cart:', err),
         });
       } else {
         this.cartService.loadCart();

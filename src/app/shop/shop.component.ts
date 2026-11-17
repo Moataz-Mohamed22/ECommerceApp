@@ -12,6 +12,7 @@ import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { NotificationsService } from '../core/services/notifications.service';
+import { ICart } from '../shared/models/cart';
 
 @Component({
   selector: 'app-shop',
@@ -21,8 +22,9 @@ import { NotificationsService } from '../core/services/notifications.service';
   templateUrl: './shop.component.html',
 })
 export class ShopComponent implements OnInit {
-  
+
   constructor(private _service: ShopService) {}
+
 
 
   // Pagination Parameters

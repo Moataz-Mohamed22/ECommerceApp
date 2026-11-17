@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, throwError } from 'rxjs';
 
 import { Cart, ICart, ICartItem } from '../shared/models/cart';
 import { IProduct } from '../shared/models/product';
@@ -17,7 +17,7 @@ export class CartService {
   // Holds the current cart state
   private cartSource = new BehaviorSubject<ICart | null>(null);
 
-  cart = this.cartSource.asObservable();
+  cart$ = this.cartSource.asObservable();
 
   // Create new cart
   private createCart(): ICart {
@@ -78,10 +78,8 @@ export class CartService {
       tap((cart) => {
         this.cartSource.next(cart);
         console.log(cart);
-
       }),
     );
-    
   }
 
   // Add product to cart
@@ -94,6 +92,12 @@ export class CartService {
 
     if (existingItem) {
       existingItem.quantity += quantity;
+
+      existingItem.description = itemToAdd.description;
+      existingItem.image = itemToAdd.image;
+      existingItem.name = itemToAdd.name;
+      existingItem.category = itemToAdd.category;
+      existingItem.price = itemToAdd.price;
     } else {
       currentCart.cartItems.push(itemToAdd);
     }
@@ -104,9 +108,34 @@ export class CartService {
       },
     });
   }
+  // removeCart
+  removeItem(productId: number): Observable<ICart> {
+    const currentCart = this.cartSource.value;
 
+    if (!currentCart) {
+      return throwError(() => new Error('Cart not found'));
+    }
+
+    // 1. Create a new cart without the selected product
+    const updatedCart: ICart = {
+      ...currentCart,
+      cartItems: currentCart.cartItems.filter((item) => item.id !== productId),
+    };
+
+    // 2. Send the updated cart to the backend
+    return this.http
+      .post<ICart>(`${this.baseURL}update-cart-item/${updatedCart.id}`, updatedCart)
+      .pipe(
+        // 3. Update the BehaviorSubject after successful response
+        tap((savedCart) => {
+          this.cartSource.next(savedCart);
+        }),
+      );
+  }
   // Map Product to CartItem
   private MapProductToCartItem(product: IProduct, quantity: number): ICartItem {
+    console.log('Product Description:', product.description);
+
     return {
       id: product.id,
       name: product.name,
@@ -114,6 +143,7 @@ export class CartService {
       category: product.categoryName,
       price: product.price,
       quantity: quantity,
+      description: product.description,
     };
   }
 }

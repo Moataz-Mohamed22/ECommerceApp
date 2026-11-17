@@ -12,6 +12,7 @@ export interface ICartItem {
   quantity: number;
   price: number;
   category: string;
+  description:string;
 }
 
 export class Cart implements ICart {
